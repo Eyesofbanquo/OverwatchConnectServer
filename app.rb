@@ -56,7 +56,7 @@ class MyApp<Sinatra::Base
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
-	put '/create-lobby' do
+	post '/create-lobby' do
 		@lobby = Lobby.get(:username => params[:username])
 		@lobby.update(:region => params[:region], :platform => params[:platform], :groupsize => params[:groupSize], :groupid => SecureRandom.hex)
 		#@lobby
