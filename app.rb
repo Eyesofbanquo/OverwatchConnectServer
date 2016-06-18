@@ -57,7 +57,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid])
-		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}", :region => "#{params[:region]}") == 0
+		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
