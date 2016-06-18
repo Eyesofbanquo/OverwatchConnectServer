@@ -70,7 +70,7 @@ class MyApp<Sinatra::Base
 	#username | region | platform | groupsize
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		lobby.update(:platform => params[:platform], :groupsize => params[:groupSize])
+		lobby.update(:platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region])
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
