@@ -11,7 +11,7 @@ require 'data_mapper'
 # Region:String
 # isFull:Bool - to determine whether or not the group is full. When the group is full you'll send a notification to the group letting them know
 
-DataMapper.setup(:default, 'postgres://stark:20400112@localhost/grouptest')
+DataMapper.setup(:default, 'postgres://zsjpfrlfvevvxf:q57x4Ln9yoMPEm77IdfzddCSF2@ec2-54-225-211-218.compute-1.amazonaws.com:5432/d75l3qthbt16e8')
 
 class Lobby
 	include DataMapper::Resource
@@ -41,7 +41,7 @@ class MyApp<Sinatra::Base
 		"Hello World!"
 	end
 	post '/create-lobby' do
-		@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :udid => SecureRandom.hex)
+		@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :udid => params[:udid])
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 		#username = params[:username].to_str
 		#region = params[:region].to_str
