@@ -55,17 +55,22 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	#parameter requirements
+	#groupid
+	post '/delete-lobby' do
+	end
+	#parameter requirements
 	#username | password | udid | platform | region
 	post '/login' do
 		
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid])
-		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0 && Lobby.count(:password => params[:password]) == 0
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid],:groupid => SecureRandom.hex, :region => params[:region])
+		
+		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		lobby.update(:region => params[:region], :platform => params[:platform], :groupsize => params[:groupSize], :groupid => SecureRandom.hex)
+		lobby.update(:platform => params[:platform], :groupsize => params[:groupSize])
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
