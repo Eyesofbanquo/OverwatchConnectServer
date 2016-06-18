@@ -60,7 +60,7 @@ class MyApp<Sinatra::Base
 		#puts lobbies
 		v = lobbies.collect{|item| {:username => item.username, :id => item.id}}
 		#"#{lobbies.get(1)["username"]}"
-		v.to_json
+		v
 	end
 end
 
