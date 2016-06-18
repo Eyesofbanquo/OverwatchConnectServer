@@ -48,7 +48,8 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	get '/lobby' do
-		lobby = Lobby.all(:udid => params[:udid])
+		user = Lobby.all(:username => params[:username])
+		lobby = Lobby.all(:groupid => user["groupid"])
 		v = lobby.collect{|item| {:username => item.username}}
 		v.to_json
 	end
@@ -57,7 +58,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid])
-		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
+		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0 && Lobby.count(:udid)
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
