@@ -58,7 +58,7 @@ class MyApp<Sinatra::Base
 		region = params[:region]
 		lobbies = Lobby.all(:platform => platform, :region => region)
 		puts lobbies
-		v = lobbies.collect{|item| {:username => item.username, :id => item.id}}
+		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
