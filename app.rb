@@ -51,7 +51,7 @@ class MyApp<Sinatra::Base
 		#@regions[region][platform].push(lobby)
 		
 	end
-	get '/groups/:platform/:region' do
+	get '/groups' do
 		#platform = params[:platform].to_str
 		#filtered_group = @regions["us"]
 		platform = params[:platform]
