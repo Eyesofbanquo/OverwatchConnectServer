@@ -48,7 +48,7 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	get '/lobby' do
-		lobby = Lobby.all(params[:udid])
+		lobby = Lobby.all(:udid => params[:udid])
 		v = lobby.collect{|item| {:username => item.username}}
 		v.to_json
 	end
