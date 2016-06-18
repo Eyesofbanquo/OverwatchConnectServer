@@ -58,7 +58,7 @@ class MyApp<Sinatra::Base
 	put '/create-lobby' do
 		@lobby = Lobby.get(:username => params[:username])
 		@lobby.update(:region => params[:region], :platform => params[:platform], :groupsize => params[:groupSize], :groupid => SecureRandom.hex)
-		@lobby
+		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
 		#@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
