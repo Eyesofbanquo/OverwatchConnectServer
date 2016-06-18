@@ -48,8 +48,9 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	#parameter requirements
-	#username | password | udid
+	#username | password | udid | platform | region
 	post '/login' do
+		
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid])
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 	end
@@ -69,7 +70,7 @@ class MyApp<Sinatra::Base
 		#lobby = Lobby.new(username, platform, region, group_size)
 		#@regions[region][platform].push(lobby)
 		
-	#end
+	end
 	get '/groups' do
 		#platform = params[:platform].to_str
 		#filtered_group = @regions["us"]
