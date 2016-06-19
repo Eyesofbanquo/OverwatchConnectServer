@@ -65,7 +65,7 @@ class MyApp<Sinatra::Base
 	#groupid
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		oldid = lobby[0]["groupid"]
+		oldid = lobby["groupid"]
 		
 		lobby.update(:groupid => SecureRandom.hex)
 		old_lobby = Lobby.all(:udid => oldid)
