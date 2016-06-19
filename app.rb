@@ -100,6 +100,7 @@ class MyApp<Sinatra::Base
 			u = Lobby.first(:username => params[:username])
 			if params[:password] == u["password"] 
 				u.update(:udid => params[:udid], :region => params[:region])
+				v["status"] = "success!"
 			else
 				v["status"] = "error"
 			end
