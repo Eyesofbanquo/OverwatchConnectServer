@@ -58,8 +58,8 @@ class MyApp<Sinatra::Base
 	#groupid
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		for i in 0...lobby[0].length
-			player = Lobby.first(:username => lobby[0][i]["username"])
+		for i in 0...lobby.length
+			player = Lobby.first(:username => lobby[i]["username"])
 			player.update(:groupid => SecureRandom.hex)
 		end
 		#lobby.update(:groupid => SecureRandom.hex)
