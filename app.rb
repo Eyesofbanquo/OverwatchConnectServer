@@ -65,16 +65,17 @@ class MyApp<Sinatra::Base
 	#groupid
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		oldid = lobby["groupid"]
-		
-		lobby.update(:groupid => SecureRandom.hex)
-		old_lobby = Lobby.all(:udid => oldid)
-		old_lobby.destroy
-		
+		#oldid = lobby[0]["groupid"]
 		token = lobby[0]["udid"]
 		notification = Houston::Notification.new(device: token)
 		notification.alert = "Group Disbanded"
 		APN.push(notification)
+		
+		lobby.destroy
+		#old_lobby = Lobby.all(:udid => oldid)
+		#old_lobby.destroy
+		
+		
 		#lobby.update(:groupid => SecureRandom.hex)
 	end
 	#parameter requirements
