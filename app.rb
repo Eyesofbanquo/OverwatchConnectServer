@@ -66,11 +66,13 @@ class MyApp<Sinatra::Base
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
 		oldid = lobby[0]["groupid"]
+		old_lobby = Lobby.first(:udid => oldid)
+		old_lobby.destroy
 		lobby.update(:groupid => SecureRandom.hex)
 		
 		token = lobby[0]["udid"]
 		notification = Houston::Notification.new(device: token)
-		notification.alert = "We in there for real this time"
+		notification.alert = "Group Disbanded"
 		APN.push(notification)
 		#lobby.update(:groupid => SecureRandom.hex)
 	end
@@ -105,7 +107,6 @@ class MyApp<Sinatra::Base
 		platform = params[:platform]
 		region = params[:region]
 		lobbies = Lobby.all(:platform => platform, :region => region)
-		puts lobbies
 		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
