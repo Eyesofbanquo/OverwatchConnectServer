@@ -49,8 +49,8 @@ class MyApp<Sinatra::Base
 	end
 	get '/lobby' do
 		user = Lobby.all(:username => params[:username])
-		#lobby = Lobby.first(:groupid => user[])
-		v = user.collect{|item| {:username => item.username}}
+		lobby = Lobby.first(:groupid => user[0]["groupid"])
+		v = lobby.collect{|item| {:username => item.username}}
 		v.to_json
 	end
 	#parameter requirements | get the new groupid SecureRandom.hex
