@@ -68,7 +68,7 @@ class MyApp<Sinatra::Base
 		oldid = lobby[0]["groupid"]
 		
 		lobby.update(:groupid => SecureRandom.hex)
-		old_lobby = Lobby.first(:udid => oldid)
+		old_lobby = Lobby.all(:udid => oldid)
 		old_lobby[0].destroy
 		
 		token = lobby[0]["udid"]
