@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'rest-client'
 require 'data_mapper'
+require 'houston'
 
 #Going to need a datastructure to hold the information for each group
 #Each group will have:
@@ -11,6 +12,8 @@ require 'data_mapper'
 # Region:String
 # isFull:Bool - to determine whether or not the group is full. When the group is full you'll send a notification to the group letting them know
 
+APN = Houston::Client.development
+APN.certificate = File.read('./apple_push_dev.pem')
 DataMapper.setup(:default, 'postgres://zsjpfrlfvevvxf:q57x4Ln9yoMPEm77IdfzddCSF2@ec2-54-225-211-218.compute-1.amazonaws.com:5432/d75l3qthbt16e8')
 
 class Lobby
@@ -43,6 +46,10 @@ class MyApp<Sinatra::Base
 		"Hello World!"
 	end
 	#this isn't ready yet
+	get '/notification' do
+		
+	end
+	#this isn't ready
 	get '/user' do
 		@lobby = Lobby.get(:username => params[:username], :password => params[:password])
 		v = @lobby.collect{|item| {:username => item.username, :password => item.password}}
@@ -61,6 +68,10 @@ class MyApp<Sinatra::Base
 		oldid = lobby[0]["groupid"]
 		lobby.update(:groupid => SecureRandom.hex)
 		
+		token = lobby[0]["udid"]
+		notification = Houston::Notification.new(device: token)
+		notification.alert = "We in there for real this time"
+		APN.push(notification)
 		#lobby.update(:groupid => SecureRandom.hex)
 	end
 	#parameter requirements

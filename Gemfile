@@ -7,3 +7,4 @@ gem 'sinatra'
 gem 'rest-client'
 gem 'data_mapper'
 gem "dm-postgres-adapter"
+gem 'houston'
