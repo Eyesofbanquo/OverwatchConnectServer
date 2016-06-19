@@ -66,9 +66,10 @@ class MyApp<Sinatra::Base
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
 		oldid = lobby[0]["groupid"]
-		old_lobby = Lobby.first(:udid => oldid)
-		old_lobby.destroy
+		
 		lobby.update(:groupid => SecureRandom.hex)
+		old_lobby = Lobby.first(:udid => oldid)
+		old_lobby[0].destroy
 		
 		token = lobby[0]["udid"]
 		notification = Houston::Notification.new(device: token)
