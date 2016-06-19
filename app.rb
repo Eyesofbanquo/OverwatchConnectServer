@@ -51,9 +51,9 @@ class MyApp<Sinatra::Base
 	end
 	#this isn't ready
 	get '/user' do
-		@lobby = Lobby.get(:username => params[:username], :password => params[:password])
-		v = @lobby.collect{|item| {:username => item.username, :password => item.password}}
-		v.to_json
+		#@lobby = Lobby.get(:username => params[:username], :password => params[:password])
+		#v = @lobby.collect{|item| {:username => item.username, :password => item.password}}
+		#v.to_json
 	end
 	get '/lobby' do
 		user = Lobby.all(:username => params[:username])
@@ -69,7 +69,7 @@ class MyApp<Sinatra::Base
 		
 		lobby.update(:groupid => SecureRandom.hex)
 		old_lobby = Lobby.all(:udid => oldid)
-		old_lobby[0].destroy
+		old_lobby.destroy
 		
 		token = lobby[0]["udid"]
 		notification = Houston::Notification.new(device: token)
