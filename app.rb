@@ -48,15 +48,16 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	get '/lobby' do
-		user = Lobby.all(:username => params[:username])
-		user_collect = user.collect{|item| {:groupid => item.groupid}}
-		lobby = Lobby.all(:groupid => user_collect[0]["groupid"])
+		user = Lobby.get(:username => params[:username])
+		lobby = Lobby.all(:groupid => user["groupid"])
 		v = lobby.collect{|item| {:username => item.username}}
 		v.to_json
 	end
-	#parameter requirements
+	#parameter requirements | get the new groupid SecureRandom.hex
 	#groupid
 	post '/delete-lobby' do
+		lobby = Lobby.all(:username => params[:username])
+		lobby.update(:groupid => SecureRandom.hex)
 	end
 	#parameter requirements
 	#username | password | udid | platform | region
