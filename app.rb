@@ -56,6 +56,7 @@ class MyApp<Sinatra::Base
 		#v.to_json
 	end
 	get '/lobby' do
+		
 		user = Lobby.all(:username => params[:username])
 		lobby = Lobby.all(:groupid => user[0]["groupid"])
 		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
@@ -93,10 +94,21 @@ class MyApp<Sinatra::Base
 	#parameter requirements
 	#username | password | udid | platform | region
 	post '/login' do
-		
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex)
+		v = {:status => "error"}
+		if user = Lobby.first(:username => params[:username]) == true
+			#This means the user was found so now must check password
+			u = Lobby.first(:username => params[:username])
+			if params[:password] == u["password"] 
+				u.update(:udid => params[:udid], :region => params[:region])
+			else
+				v["status"] = "error"
+			end
+		else
+			@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex)
 		
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
+		end
+		v.to_json
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
