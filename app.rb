@@ -58,8 +58,9 @@ class MyApp<Sinatra::Base
 	get '/lobby' do
 		user = Lobby.all(:username => params[:username])
 		lobby = Lobby.all(:groupid => user[0]["groupid"])
-		#v = lobby.collect{|item| }
-		lobby.to_json
+		v = lobby.collect{|item| {:username => lobby["username"], :groupid => lobby["groupid"], :udid => lobby["udid"]}}
+		#lobby.to_json
+		v
 	end
 	#parameter requirements | get the new groupid SecureRandom.hex
 	#groupid
@@ -82,7 +83,7 @@ class MyApp<Sinatra::Base
 	#username | password | udid | platform | region
 	post '/login' do
 		
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region])
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex)
 		
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 	end
