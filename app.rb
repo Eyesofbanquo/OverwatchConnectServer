@@ -103,6 +103,15 @@ class MyApp<Sinatra::Base
 		#@regions[region][platform].push(lobby)
 		
 	end
+	post '/join-lobby' do
+		username = params[:username]
+		groupid = params[:groupid]
+		
+		#This should get the owner of the group
+		lobby = Lobby.first(:groupid => groupid)
+		player = Lobby.first(:username => username)
+		player.update(:groupid => lobby["groupid"])
+	end
 	get '/groups' do
 		#platform = params[:platform].to_str
 		#filtered_group = @regions["us"]
