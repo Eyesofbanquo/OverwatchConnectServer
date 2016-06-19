@@ -79,6 +79,17 @@ class MyApp<Sinatra::Base
 		
 		#lobby.update(:groupid => SecureRandom.hex)
 	end
+	post '/leave-lobby' do
+		lobby = Lobby.first(:username => params[:username])
+		groupid = Lobby.all(:groupid => lobby["groupid"]) #get lobby id so that you can send notification to all users in lobby | refresh their tables
+		token = lobby["udid"]
+		notification = Houston::Notification.new(device:token)
+		notification.alert = "#{lobby["username"]} has left the lobby!"
+		APN.push(notification)
+		
+		lobby.update(:groupid => SecureRandom.hex)
+		
+	end
 	#parameter requirements
 	#username | password | udid | platform | region
 	post '/login' do
