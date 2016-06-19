@@ -64,7 +64,7 @@ class MyApp<Sinatra::Base
 	#parameter requirements | get the new groupid SecureRandom.hex
 	#groupid
 	post '/delete-lobby' do
-		lobby = Lobby.all(:username => params[:username])
+		lobby = Lobby.first(:username => params[:username])
 		#oldid = lobby[0]["groupid"]
 		token = lobby[0]["udid"]
 		notification = Houston::Notification.new(device: token)
