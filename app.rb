@@ -49,7 +49,7 @@ class MyApp<Sinatra::Base
 	end
 	get '/lobby' do
 		user = Lobby.get(:username => params[:username])
-		lobby = Lobby.all(:groupid => user["groupid"])
+		lobby = Lobby.first(:groupid => user["groupid"])
 		v = lobby.collect{|item| {:username => item.username}}
 		v.to_json
 	end
