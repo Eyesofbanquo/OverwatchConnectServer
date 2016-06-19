@@ -42,6 +42,7 @@ class MyApp<Sinatra::Base
 	get '/' do
 		"Hello World!"
 	end
+	#this isn't ready yet
 	get '/user' do
 		@lobby = Lobby.get(:username => params[:username], :password => params[:password])
 		v = @lobby.collect{|item| {:username => item.username, :password => item.password}}
@@ -57,7 +58,11 @@ class MyApp<Sinatra::Base
 	#groupid
 	post '/delete-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		lobby.update(:groupid => SecureRandom.hex)
+		for i in 0...lobby.count
+			player = Lobby.first(:username => lobby[0][i]["username"])
+			player.update(:groupid => SecureRandom.hex)
+		end
+		#lobby.update(:groupid => SecureRandom.hex)
 	end
 	#parameter requirements
 	#username | password | udid | platform | region
