@@ -66,7 +66,7 @@ class MyApp<Sinatra::Base
 	post '/delete-lobby' do
 		lobby = Lobby.first(:username => params[:username])
 		#oldid = lobby[0]["groupid"]
-		token = lobby[0]["udid"]
+		token = lobby["udid"]
 		notification = Houston::Notification.new(device: token)
 		notification.alert = "Group Disbanded"
 		APN.push(notification)
