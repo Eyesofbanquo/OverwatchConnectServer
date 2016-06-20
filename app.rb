@@ -98,7 +98,12 @@ class MyApp<Sinatra::Base
 		v = {:status => "error"}
 
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => false)
-		@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
+		if @lobby.password == "yusuke"
+			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
+			v["status"] = "success"
+		else
+			v["status"] = "error"
+		end
 		#puts user
 		
 		#user = Lobby.first(:udid => params[:udid])
@@ -122,7 +127,7 @@ class MyApp<Sinatra::Base
 		#end
 		#This means the user was found so now must check password
 		
-		#v.to_json
+		v.to_json
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
