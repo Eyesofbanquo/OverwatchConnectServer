@@ -101,6 +101,10 @@ class MyApp<Sinatra::Base
 			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
 		
 		user = Lobby.first(:udid => params[:udid], :username => params[:username])
+		
+		
+		
+		
 		if user["password"] == params[:password]
 			v["status"] = "success!"
 		else
