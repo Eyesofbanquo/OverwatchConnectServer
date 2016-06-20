@@ -26,7 +26,7 @@ class Lobby
 	property :groupsize, Integer
 	property :groupid, Text
 	property :udid, Text
-	property :owner, String
+	property :owner, Text
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -89,7 +89,7 @@ class MyApp<Sinatra::Base
 		notification.alert = "#{lobby["username"]} has left the lobby!"
 		APN.push(notification)
 		
-		lobby.update(:groupid => SecureRandom.hex)
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 		
 	end
 	#parameter requirements
@@ -97,7 +97,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => ""}
 
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform])
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'yes')
 		if Lobby.first(:udid => params[:udid]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
@@ -147,8 +147,8 @@ class MyApp<Sinatra::Base
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
 		lobby.update(:owner => params[:owner])
-		h = Lobby.first_or_create(:username => params[:username]).update!(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => "ok")
-		h.save!
+		h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
+		#h.save!
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
@@ -168,7 +168,7 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid)
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => params[:owner])
+		player.update(:groupid => lobby["groupid"], :owner => 'no')
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
@@ -176,7 +176,7 @@ class MyApp<Sinatra::Base
 		platform = params[:platform]
 		region = params[:region]
 		#owner = "true"
-		lobbies = Lobby.all(:platform => platform, :region => region, :owner => "true")
+		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes')
 		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
