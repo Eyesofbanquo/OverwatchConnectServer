@@ -98,9 +98,9 @@ class MyApp<Sinatra::Base
 		v = {:status => "error"}
 		
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform])
-			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
+			@lobby.save! if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
 		
-		user = Lobby.first(:udid => params[:udid], :username => params[:username])
+		user = Lobby.first(:udid => params[:udid])
 		
 		
 		
