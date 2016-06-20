@@ -67,21 +67,16 @@ class MyApp<Sinatra::Base
 	#parameter requirements | get the new groupid SecureRandom.hex
 	#groupid
 	post '/delete-lobby' do
-		lobby = Lobby.first(:username => params[:username])
-		#oldid = lobby[0]["groupid"]
-		token = lobby["udid"]
-		notification = Houston::Notification.new(device: token)
-		notification.alert = "Group Disbanded"
-		APN.push(notification)
-		
-		lobby.update(:owner => 'no', :groupid => SecureRandom.hex)
-		
-		
-		#old_lobby = Lobby.all(:udid => oldid)
-		#old_lobby.destroy
-		
-		
-		#lobby.update(:groupid => SecureRandom.hex)
+		player = Lobby.first(:username => params[:username])
+		player.update(:owner => 'no', :groupid => SecureRandom.hex)
+
+		groupid = Lobby.all(:groupid => params[:groupid])
+		for i in groupid
+			token = i["udid"]
+			notification = Houston::Notification.new(device:token)
+			notification.alert = "Group Disbanded"
+			APN.push(notification)
+		end
 	end
 	post '/leave-lobby' do
 		lobby = Lobby.first(:username => params[:username])
@@ -178,23 +173,24 @@ class MyApp<Sinatra::Base
 		#owner = "false"
 		#This should get the owner of the group
 		lobbyAll = Lobby.all(:groupid => groupid)
-		lobby = Lobby.first(:owner => 'yes')
-		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => 'no')
-		
-		groupid = Lobby.all(:groupid => groupid)
-		
-		
-		for i in groupid
-			token = i["udid"]
+		if lobbyAll.size < 6
+			lobby = Lobby.first(:owner => 'yes')
+			player = Lobby.first(:username => username)
+			player.update(:groupid => lobby["groupid"], :owner => 'no')
+			groupid = Lobby.all(:groupid => groupid)
+			for i in groupid
+				token = i["udid"]
+				notification = Houston::Notification.new(device:token)
+				notification.alert = "#{player["username"]} has joined the lobby!"
+				APN.push(notification)
+			end
+		else
+			player = Lobby.first(:username => params[:username])
+			token = player["udid"]
 			notification = Houston::Notification.new(device:token)
-			notification.alert = "#{player["username"]} has joined the lobby!"
+			notification.alert = "Lobby is full"
 			APN.push(notification)
 		end
-		
-		
-		
-		
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
