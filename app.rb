@@ -26,7 +26,7 @@ class Lobby
 	property :groupsize, Integer
 	property :groupid, Text
 	property :udid, Text
-	property :owner, Text
+	property :owner, String
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -97,7 +97,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => ""}
 
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'false')
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => "false")
 		if Lobby.first(:udid => params[:udid]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
@@ -146,7 +146,7 @@ class MyApp<Sinatra::Base
 	#username | region | platform | groupsize
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		lobby.update(:owner => 'true')
+		lobby.update(:owner => "true")
 		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid])
 		#@lobby
 #	post '/create-lobby' do
@@ -167,7 +167,7 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid)
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => 'false')
+		player.update(:groupid => lobby["groupid"], :owner => "false")
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
@@ -175,7 +175,7 @@ class MyApp<Sinatra::Base
 		platform = params[:platform]
 		region = params[:region]
 		#owner = "true"
-		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'true')
+		lobbies = Lobby.all(:platform => platform, :region => region, :owner => "true")
 		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
