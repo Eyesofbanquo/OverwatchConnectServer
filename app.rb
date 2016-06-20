@@ -101,7 +101,7 @@ class MyApp<Sinatra::Base
 		v = {:status => ""}
 
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'no')
-		if Lobby.first(:udid => params[:udid]) != nil
+		if Lobby.first(:username => params[:username]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
 			if user["password"] == params[:password]
