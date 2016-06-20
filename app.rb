@@ -108,7 +108,7 @@ class MyApp<Sinatra::Base
 				v["status"] = "error"
 			end
 		else
-			@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex)
+			@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform])
 			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
 		end
 		v.to_json
