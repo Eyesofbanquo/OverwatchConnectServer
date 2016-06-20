@@ -109,6 +109,7 @@ class MyApp<Sinatra::Base
 			else
 				v.replace({:status => "error"})
 			end
+		end
 		@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0			
 		
 		#if @lobby.password == "yusuke"
