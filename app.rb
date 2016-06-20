@@ -102,7 +102,7 @@ class MyApp<Sinatra::Base
 		
 		user = Lobby.first(:udid => params[:udid])
 		
-		
+		puts user
 		
 		
 		if user["password"] == params[:password]
