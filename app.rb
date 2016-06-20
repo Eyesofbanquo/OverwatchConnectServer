@@ -82,7 +82,7 @@ class MyApp<Sinatra::Base
 		lobby = Lobby.first(:username => params[:username])
 		
 		groupid = Lobby.all(:groupid => lobby["groupid"]) #get lobby id so that you can send notification to all users in lobby | refresh their tables
-		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
+		
 		for i in groupid
 			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
@@ -91,7 +91,7 @@ class MyApp<Sinatra::Base
 		end
 		#token = lobby["udid"]
 		
-		
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 		
 		
 	end
