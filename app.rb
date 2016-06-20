@@ -147,7 +147,7 @@ class MyApp<Sinatra::Base
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
 		lobby.update(:owner => params[:owner])
-		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'true'.to_str)
+		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => "t".to_str)
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
