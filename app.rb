@@ -105,7 +105,7 @@ class MyApp<Sinatra::Base
 		
 		
 		
-		if user["password"] == params[:password]
+		if user[0]["password"] == params[:password]
 			v["status"] = "success!"
 		else
 			v["status"] = "error"
