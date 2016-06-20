@@ -96,16 +96,13 @@ class MyApp<Sinatra::Base
 	#username | password | udid | platform | region
 	post '/login' do
 		v = {:status => "error"}
-		
+
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform])
-			@lobby.save! if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
-		
-		user = Lobby.first(:udid => params[:udid])
-		
-		puts user
+		@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
+		#puts user
 		
 		
-		if user["password"] == params[:password]
+		if @lobby["password"] == params[:password]
 			v["status"] = "success!"
 		else
 			v["status"] = "error"
