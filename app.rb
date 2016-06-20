@@ -97,7 +97,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => ""}
 
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'false')
+		@lobby = Lobby.new(:username => 'Monkey', :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'false')
 		if Lobby.first(:udid => params[:udid]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
