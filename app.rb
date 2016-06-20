@@ -147,7 +147,14 @@ class MyApp<Sinatra::Base
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
 		lobby.update(:owner => params[:owner])
-		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => "t".to_str)
+		if Lobby.first(:username => params[:username]) != nil
+			#if this is true then then that means the user is creating the lobby
+			user = Lobby.first(:username => params[:username])
+			user.update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 't')
+		else
+			#this means the user just recently destroyed the lobby and must be created again
+			Lobby.create(:username => params[:username], :password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'f')
+		end
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
