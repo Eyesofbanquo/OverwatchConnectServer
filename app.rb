@@ -180,9 +180,10 @@ class MyApp<Sinatra::Base
 		player.update(:groupid => lobby["groupid"], :owner => 'no')
 		
 		groupid = Lobby.all(:groupid => groupid)
-		token = params[:udid]
+		
 		
 		for i in groupid
+			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "#{player["username"]} has joined the lobby!"
 			APN.push(notification)
