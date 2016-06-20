@@ -175,17 +175,21 @@ class MyApp<Sinatra::Base
 		groupid = params[:groupid]
 		#owner = "false"
 		#This should get the owner of the group
-		lobby = Lobby.first(:groupid => groupid)
+		lobby = Lobby.first(:groupid => groupid, :owner => 'yes')
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => 'no')
 		
 		groupid = Lobby.all(:groupid => groupid)
+		token = params[:udid]
+		
 		for i in groupid
-			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "#{player["username"]} has joined the lobby!"
 			APN.push(notification)
 		end
+		
+		player.update(:groupid => lobby["groupid"], :owner => 'no')
+		
+		
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
