@@ -103,7 +103,7 @@ class MyApp<Sinatra::Base
 			v["status"] = "success"
 		end
 		if @lobby.password != "yusuke"
-			v.status = "error"
+			v.replace({:status => "error"})
 		end
 		#puts user
 		
