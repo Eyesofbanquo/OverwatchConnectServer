@@ -26,7 +26,7 @@ class Lobby
 	property :groupsize, Integer
 	property :groupid, Text
 	property :udid, Text
-	property :owner, Boolean
+	property :owner, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
