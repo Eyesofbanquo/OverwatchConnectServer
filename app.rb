@@ -183,7 +183,7 @@ class MyApp<Sinatra::Base
 		for i in groupid
 			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
-			notification.alert = "#{lobby["username"]} has joined the lobby!"
+			notification.alert = "#{player["username"]} has joined the lobby!"
 			APN.push(notification)
 		end
 	end
