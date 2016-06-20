@@ -146,7 +146,7 @@ class MyApp<Sinatra::Base
 	#username | region | platform | groupsize
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		lobby.update(:owner => "true")
+		lobby.update(:owner => params[:owner])
 		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid])
 		#@lobby
 #	post '/create-lobby' do
@@ -167,7 +167,7 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid)
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => "false")
+		player.update(:groupid => lobby["groupid"], :owner => params[:owner])
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
