@@ -74,7 +74,9 @@ class MyApp<Sinatra::Base
 		notification.alert = "Group Disbanded"
 		APN.push(notification)
 		
-		lobby.destroy
+		lobby.update(:owner => 'no', :groupid => SecureRandom.hex)
+		
+		
 		#old_lobby = Lobby.all(:udid => oldid)
 		#old_lobby.destroy
 		
