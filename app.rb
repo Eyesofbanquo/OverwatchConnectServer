@@ -26,7 +26,7 @@ class Lobby
 	property :groupsize, Integer
 	property :groupid, Text
 	property :udid, Text
-	property :owner, String
+	property :owner, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -97,7 +97,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => "error"}
 
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => "false")
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => false)
 		@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
 		#puts user
 		
@@ -128,7 +128,7 @@ class MyApp<Sinatra::Base
 	#username | region | platform | groupsize
 	post '/create-lobby' do
 		lobby = Lobby.all(:username => params[:username])
-		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => "true")
+		Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => true)
 		#@lobby
 #	post '/create-lobby' do
 	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
@@ -148,14 +148,14 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid)
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => "false")
+		player.update(:groupid => lobby["groupid"], :owner => false)
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
 		#filtered_group = @regions["us"]
 		platform = params[:platform]
 		region = params[:region]
-		lobbies = Lobby.all(:platform => platform, :region => region, :owner => "true")
+		lobbies = Lobby.all(:platform => platform, :region => region, :owner => true)
 		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
