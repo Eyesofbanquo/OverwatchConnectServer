@@ -86,7 +86,7 @@ class MyApp<Sinatra::Base
 	post '/leave-lobby' do
 		lobby = Lobby.first(:username => params[:username])
 		groupid = Lobby.all(:groupid => lobby["groupid"]) #get lobby id so that you can send notification to all users in lobby | refresh their tables
-		for i in groupid.count 
+		for i in groupid
 			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "#{lobby["username"]} has left the lobby!"
