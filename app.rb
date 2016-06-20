@@ -107,7 +107,7 @@ class MyApp<Sinatra::Base
 		else
 			@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex)
 		
-		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
+			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
 		end
 		v.to_json
 	end
