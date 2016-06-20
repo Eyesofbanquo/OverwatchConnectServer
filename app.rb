@@ -175,7 +175,8 @@ class MyApp<Sinatra::Base
 		groupid = params[:groupid]
 		#owner = "false"
 		#This should get the owner of the group
-		lobby = Lobby.first(:groupid => groupid, :owner => 'yes')
+		lobbyAll = Lobby.all(:groupid => groupid)
+		lobby = Lobby.first(:owner => 'yes')
 		player = Lobby.first(:username => username)
 		player.update(:groupid => lobby["groupid"], :owner => 'no')
 		
