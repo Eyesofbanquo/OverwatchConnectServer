@@ -95,7 +95,7 @@ class MyApp<Sinatra::Base
 	#parameter requirements
 	#username | password | udid | platform | region
 	post '/login' do
-		v = {:status => "error"}
+		v = {:status => ""}
 
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => false)
 		if @lobby.password == "yusuke"
