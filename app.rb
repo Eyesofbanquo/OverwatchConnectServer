@@ -109,9 +109,7 @@ class MyApp<Sinatra::Base
 			else
 				v.replace({:status => "error"})
 			end
-		else
-			@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0			
-		end
+		@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0			
 		
 		#if @lobby.password == "yusuke"
 
@@ -144,6 +142,12 @@ class MyApp<Sinatra::Base
 		#This means the user was found so now must check password
 		
 		v.to_json
+	end
+	#params :username
+	post '/logout' do
+		username = params[:username]
+		player = Lobby.first(:username => username)
+		player.destroy
 	end
 	#Parameter requirements
 	#username | region | platform | groupsize
