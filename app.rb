@@ -58,8 +58,8 @@ class MyApp<Sinatra::Base
 	end
 	get '/lobby' do
 		
-		user = Lobby.all(:username => params[:username])
-		lobby = Lobby.all(:groupid => user[0]["groupid"])
+		user = Lobby.first(:username => params[:username])
+		lobby = Lobby.all(:groupid => user["groupid"])
 		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
 	#	lobby.to_json
 		v.to_json
@@ -85,6 +85,7 @@ class MyApp<Sinatra::Base
 	end
 	post '/leave-lobby' do
 		lobby = Lobby.first(:username => params[:username])
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 		groupid = Lobby.all(:groupid => lobby["groupid"]) #get lobby id so that you can send notification to all users in lobby | refresh their tables
 		for i in groupid
 			token = i["udid"]
@@ -95,7 +96,7 @@ class MyApp<Sinatra::Base
 		#token = lobby["udid"]
 		
 		
-		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
+		
 		
 	end
 	#parameter requirements
