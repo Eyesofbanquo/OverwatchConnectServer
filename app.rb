@@ -174,6 +174,7 @@ class MyApp<Sinatra::Base
 		
 	end
 	post '/join-lobby' do
+		v = {:status => ""}
 		username = params[:username]
 		groupid = params[:groupid]
 		#owner = "false"
@@ -191,12 +192,14 @@ class MyApp<Sinatra::Base
 				APN.push(notification)
 			end
 		else
+			v.replace({:status => "full"})
 			player = Lobby.first(:username => params[:username])
 			token = player["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "Lobby is full"
 			APN.push(notification)
 		end
+		v.to_json
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
