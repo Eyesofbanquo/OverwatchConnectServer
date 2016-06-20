@@ -86,10 +86,14 @@ class MyApp<Sinatra::Base
 	post '/leave-lobby' do
 		lobby = Lobby.first(:username => params[:username])
 		groupid = Lobby.all(:groupid => lobby["groupid"]) #get lobby id so that you can send notification to all users in lobby | refresh their tables
-		token = lobby["udid"]
-		notification = Houston::Notification.new(device:token)
-		notification.alert = "#{lobby["username"]} has left the lobby!"
-		APN.push(notification)
+		for i in 0...lobby.count 
+			token = groupid[i]["udid"]
+			notification = Houston::Notification.new(device:token)
+			notification.alert = "#{lobby["username"]} has left the lobby!"
+			APN.push(notification)
+		end
+		#token = lobby["udid"]
+		
 		
 		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 		
@@ -99,7 +103,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => ""}
 
-		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'yes')
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'no')
 		if Lobby.first(:udid => params[:udid]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
