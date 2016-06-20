@@ -177,6 +177,7 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid, :owner => 'yes')
 		player = Lobby.first(:username => username)
+		player.update(:groupid => lobby["groupid"], :owner => 'no')
 		
 		groupid = Lobby.all(:groupid => groupid)
 		token = params[:udid]
@@ -187,7 +188,7 @@ class MyApp<Sinatra::Base
 			APN.push(notification)
 		end
 		
-		player.update(:groupid => lobby["groupid"], :owner => 'no')
+		
 		
 		
 	end
