@@ -97,7 +97,7 @@ class MyApp<Sinatra::Base
 	post '/login' do
 		v = {:status => ""}
 
-		@lobby = Lobby.new(:username => 'Monkey', :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'false')
+		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'true')
 		if Lobby.first(:udid => params[:udid]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			
@@ -166,7 +166,7 @@ class MyApp<Sinatra::Base
 		#This should get the owner of the group
 		lobby = Lobby.first(:groupid => groupid)
 		player = Lobby.first(:username => username)
-		player.update(:groupid => lobby["groupid"], :owner => 'false')
+		player.update(:groupid => lobby["groupid"], :owner => 'true')
 	end
 	get '/groups' do
 		#platform = params[:platform].to_str
