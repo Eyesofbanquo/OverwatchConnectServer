@@ -54,7 +54,7 @@ class MyApp<Sinatra::Base
 		user.update(:ready => params[:ready])
 		groupid = Lobby.all(:groupid => params[:groupid])
 		
-		if user["ready"] == true 
+		if params[:ready] == true 
 			for i in groupid
 				token = i["udid"]
 				notification = Houston::Notification.new(device:token)
