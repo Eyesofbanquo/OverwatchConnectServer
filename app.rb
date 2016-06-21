@@ -193,9 +193,9 @@ class MyApp<Sinatra::Base
 		platform = params[:platform]
 		region = params[:region]
 		#owner = "true"
-		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes')
-		lobby_is_full = Lobby.all(:isfull => false)
-		v = lobby_is_full.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
+		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes', :isfull => false)
+		#lobby_is_full = Lobby.all(:isfull => false)
+		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
