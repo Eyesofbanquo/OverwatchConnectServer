@@ -48,7 +48,7 @@ class MyApp<Sinatra::Base
 		"Hello World!"
 	end
 	post '/player_ready' do
-		ready = params[:ready]
+		ready = params["ready"]
 		username = params[:username]
 		user = Lobby.first(:ready => ready)
 		groupid = Lobby.all(:groupid => params[:groupid])
