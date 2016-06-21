@@ -119,14 +119,10 @@ class MyApp<Sinatra::Base
 		#lobby = Lobby.all(:username => params[:username])
 		#lobby.update(:owner => params[:owner])
 		v = {:status => ""}
-		us_region = Lobby.all(:region => 'us')
-		eu_region = Lobby.all(:region => 'eu')
+		region = Lobby.all(:region => params[:region])
+		#eu_region = Lobby.all(:region => 'eu')
 		
-		if params[:region] == 'eu' && eu_region.size < 5000
-			h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
-			lobby = Lobby.first(:username => params[:username])
-			lobby["owner"] = 'yes'
-		else if params[:region] == 'us' && us_region.size < 5000
+		if region.size < 5000
 			h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
 			lobby = Lobby.first(:username => params[:username])
 			lobby["owner"] = 'yes'
@@ -175,6 +171,4 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 end
-end
-
 MyApp.run!
