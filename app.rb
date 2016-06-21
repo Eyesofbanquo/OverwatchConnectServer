@@ -53,7 +53,7 @@ class MyApp<Sinatra::Base
 		user = Lobby.first(:username => params[:username])
 		lobby = Lobby.all(:groupid => user["groupid"])
 	
-		v = lobby2.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
+		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
 		v.to_json
 	end
 	#parameter requirements | get the new groupid SecureRandom.hex
@@ -69,6 +69,7 @@ class MyApp<Sinatra::Base
 			notification.alert = "Group Disbanded"
 			APN.push(notification)
 		end
+	
 	end
 	post '/leave-lobby' do
 		lobby = Lobby.first(:username => params[:username])
@@ -80,9 +81,7 @@ class MyApp<Sinatra::Base
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "#{lobby["username"]} has left the lobby!"
 			APN.push(notification)
-		end
-		#token = lobby["udid"]
-		
+		end		
 		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 	end
 	#parameter requirements
@@ -92,6 +91,7 @@ class MyApp<Sinatra::Base
 
 		@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform], :owner => 'no')
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
+		
 		if Lobby.first(:username => params[:username]) != nil
 			user = Lobby.first(:udid => params[:udid])
 			if user["password"] == params[:password]
@@ -134,7 +134,6 @@ class MyApp<Sinatra::Base
 		v = {:status => ""}
 		username = params[:username]
 		groupid = params[:groupid]
-		#owner = "false"
 		#This should get the owner of the group
 		lobbyAll = Lobby.all(:groupid => groupid)
 		if lobbyAll.size < 6
@@ -171,5 +170,5 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 end
-
+end
 MyApp.run!
