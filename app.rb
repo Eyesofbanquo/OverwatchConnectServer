@@ -50,7 +50,7 @@ class MyApp<Sinatra::Base
 	post '/player_ready' do
 		#ready = "ready"
 		username = params[:username]
-		user = Lobby.first(:ready => username)
+		user = Lobby.first(:username => username)
 		user.update(:ready => params[:ready])
 		groupid = Lobby.all(:groupid => params[:groupid])
 		
