@@ -27,6 +27,7 @@ class Lobby
 	property :groupid, Text
 	property :udid, Text
 	property :owner, Text
+	property :isfull, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -60,7 +61,12 @@ class MyApp<Sinatra::Base
 		
 		user = Lobby.first(:username => params[:username])
 		lobby = Lobby.all(:groupid => user["groupid"])
-		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
+		if lobby.size == 6
+			for i in lobby
+				i["isfull"] = true
+			end
+		end
+		v = lobby2.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
 	#	lobby.to_json
 		v.to_json
 	end
@@ -91,7 +97,7 @@ class MyApp<Sinatra::Base
 		end
 		#token = lobby["udid"]
 		
-		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no', :isfull => false)
 		
 		
 	end
@@ -156,9 +162,22 @@ class MyApp<Sinatra::Base
 	post '/create-lobby' do
 		#lobby = Lobby.all(:username => params[:username])
 		#lobby.update(:owner => params[:owner])
-		h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
-		lobby = Lobby.first(:username => params[:username])
-		lobby["owner"] = 'yes'
+		v = {:status => ""}
+		us_region = Lobby.all(:region => 'us')
+		eu_region = Lobby.all(:region => 'eu')
+		
+		if params[:region] == 'eu' && eu_region.size < 5000
+			h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
+			lobby = Lobby.first(:username => params[:username])
+			lobby["owner"] = 'yes'
+		else if params[:region] == 'us' && us_region.size < 5000
+			h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
+			lobby = Lobby.first(:username => params[:username])
+			lobby["owner"] = 'yes'
+		else
+			v.replace({:status => "error"})
+		end
+		
 		#h.update(:owner => 'yes')
 		#h.save!
 		#@lobby
@@ -171,7 +190,7 @@ class MyApp<Sinatra::Base
 		#group_size = params[:groupSize]
 		#lobby = Lobby.new(username, platform, region, group_size)
 		#@regions[region][platform].push(lobby)
-		
+		v.to_json
 	end
 	post '/join-lobby' do
 		v = {:status => ""}
@@ -208,7 +227,8 @@ class MyApp<Sinatra::Base
 		region = params[:region]
 		#owner = "true"
 		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes')
-		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
+		lobby_is_full = Lobby.all(:isfull => false)
+		v = lobby_is_full.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
