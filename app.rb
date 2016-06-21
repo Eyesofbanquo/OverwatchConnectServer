@@ -48,12 +48,13 @@ class MyApp<Sinatra::Base
 		"Hello World!"
 	end
 	post '/player_ready' do
-		ready = "ready"
+		#ready = "ready"
 		username = params[:username]
-		user = Lobby.first(:ready => ready)
+		user = Lobby.first(:ready => username)
+		user.update(:ready => params[:ready])
 		groupid = Lobby.all(:groupid => params[:groupid])
 		
-		if ready == true 
+		if user["ready"] == true 
 			for i in groupid
 				token = i["udid"]
 				notification = Houston::Notification.new(device:token)
