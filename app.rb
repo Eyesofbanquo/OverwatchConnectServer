@@ -33,8 +33,7 @@ DataMapper.finalize.auto_upgrade!
 	
 
 @regions = Hash.new
-h = SecureRandom.hex
-puts h
+
 
 @regions = {"us" => Hash.new, "eu" => Hash.new}
 @regions["us"] = {"xbl" => Array.new, "psn" => Array.new, "pc" => Array.new}
@@ -50,23 +49,11 @@ class MyApp<Sinatra::Base
 	get '/notification' do
 		
 	end
-	#this isn't ready
-	get '/user' do
-		#@lobby = Lobby.get(:username => params[:username], :password => params[:password])
-		#v = @lobby.collect{|item| {:username => item.username, :password => item.password}}
-		#v.to_json
-	end
 	get '/lobby' do
-		
 		user = Lobby.first(:username => params[:username])
 		lobby = Lobby.all(:groupid => user["groupid"])
-		if lobby.size == 6
-			for i in lobby
-				i["isfull"] = true
-			end
-		end
+	
 		v = lobby2.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
-	#	lobby.to_json
 		v.to_json
 	end
 	#parameter requirements | get the new groupid SecureRandom.hex
@@ -96,9 +83,7 @@ class MyApp<Sinatra::Base
 		end
 		#token = lobby["udid"]
 		
-		lobby.update(:groupid => SecureRandom.hex, :owner => 'no', :isfull => false)
-		
-		
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
 	end
 	#parameter requirements
 	#username | password | udid | platform | region
@@ -109,45 +94,12 @@ class MyApp<Sinatra::Base
 		@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
 		if Lobby.first(:username => params[:username]) != nil
 			user = Lobby.first(:udid => params[:udid])
-			
 			if user["password"] == params[:password]
 				v.replace({:status => "success"})
 			else
 				v.replace({:status => "error"})
 			end
 		end
-					
-		
-		#if @lobby.password == "yusuke"
-
-			
-		#end
-		#if @lobby.password != @user.password
-		#	v.replace({:status => "error"})
-		#end
-		#puts user
-		
-		#user = Lobby.first(:udid => params[:udid])
-		
-		#if user["password"] == params[:password]
-		#	v["status"] = "success!"
-		#else
-		#	v["status"] = "error"
-		#end
-		#if Lobby.first(:udid => params[:udid]) == true
-		#	@lobby2 = Lobby.first(:udid => params[:udid])
-		#	password = @lobby2["password"]
-		#	if password == params[:password]
-		#		v["status"] = "success!"
-		#	else 
-		#		v["status"] = "error"
-		#	end
-		#else
-			#@lobby = Lobby.new(:username => params[:username], :password => params[:password], :udid => params[:udid], :region => params[:region], :groupid => SecureRandom.hex, :platform => params[:platform])
-			#@lobby.save if Lobby.count(:udid=>"#{params[:udid].to_str}") == 0
-		#end
-		#This means the user was found so now must check password
-		
 		v.to_json
 	end
 	#params :username
@@ -176,19 +128,6 @@ class MyApp<Sinatra::Base
 		else
 			v.replace({:status => "error"})
 		end
-		
-		#h.update(:owner => 'yes')
-		#h.save!
-		#@lobby
-#	post '/create-lobby' do
-	#	@lobby = Lobby.new(:username => params[:username], :platform => params[:platform], :region => params[:region], :groupsize => params[:groupSize], :groupid => SecureRandom.hex, :udid => params[:udid])
-		#@lobby.save if Lobby.count(:username=>"#{params[:username].to_str}") == 0
-		#username = params[:username].to_str
-		#region = params[:region].to_str
-		#platform = params[:platform].to_str
-		#group_size = params[:groupSize]
-		#lobby = Lobby.new(username, platform, region, group_size)
-		#@regions[region][platform].push(lobby)
 		v.to_json
 	end
 	post '/join-lobby' do
@@ -226,8 +165,8 @@ class MyApp<Sinatra::Base
 		region = params[:region]
 		#owner = "true"
 		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes')
-		lobby_is_full = Lobby.all(:isfull => false)
-		v = lobby_is_full.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
+		#lobby_is_full = Lobby.all(:isfull => false)
+		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
