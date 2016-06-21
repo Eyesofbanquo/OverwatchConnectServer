@@ -56,7 +56,7 @@ class MyApp<Sinatra::Base
 		
 		if params[:ready] == true 
 			for i in groupid
-				token = i["udid"]
+				token = user["udid"]
 				notification = Houston::Notification.new(device:token)
 				notification.alert = "#{username} is ready"
 				notification.custom_data = {ready: "true"}
@@ -64,7 +64,7 @@ class MyApp<Sinatra::Base
 			end
 		else
 			for i in groupid
-				token = i["udid"]
+				token = user["udid"]
 				notification = Houston::Notification.new(device:token)
 				notification.alert = "#{username} is not ready"
 				notification.custom_data = {ready: "false"}
