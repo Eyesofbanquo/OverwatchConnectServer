@@ -28,6 +28,7 @@ class Lobby
 	property :udid, Text
 	property :owner, Text
 	property :isfull, Boolean, :default => false
+	property :ready, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -46,8 +47,29 @@ class MyApp<Sinatra::Base
 	get '/' do
 		"Hello World!"
 	end
-	#this isn't ready yet
-	get '/notification' do
+	post '/player_ready' do
+		ready = params[:ready]
+		username = params[:username]
+		user = Lobby.first(:ready => ready)
+		groupid = Lobby.all(:groupid => params[:groupid])
+		
+		if ready == true 
+			for i in groupid
+				token = i["udid"]
+				notification = Houston::Notification.new(device:token)
+				notification.alert = "#{username} is ready"
+				notification.custom_data = {ready: "true"}
+				APN.push(notification)
+			end
+		else
+			for i in groupid
+				token = i["udid"]
+				notification = Houston::Notification.new(device:token)
+				notification.alert = "#{username} is not ready"
+				notification.custom_data = {ready: "false"}
+				APN.push(notification)
+			end
+		end
 		
 	end
 	get '/lobby' do
@@ -58,14 +80,14 @@ class MyApp<Sinatra::Base
 				i["isfull"] = true
 			end
 		end
-		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
+		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid, :ready => item.ready}}
 		v.to_json
 	end
 	#parameter requirements | get the new groupid SecureRandom.hex
 	#groupid
 	post '/delete-lobby' do
 		player = Lobby.first(:username => params[:username])
-		player.update(:owner => 'no', :groupid => SecureRandom.hex, :isfull => false)
+		player.update(:owner => 'no', :groupid => SecureRandom.hex, :isfull => false, :ready => false)
 
 		groupid = Lobby.all(:groupid => params[:groupid])
 		for i in groupid
