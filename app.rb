@@ -96,6 +96,7 @@ class MyApp<Sinatra::Base
 			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "Group Disbanded"
+			notification.custom_data = {disbands: true}
 			APN.push(notification)
 		end
 	
@@ -109,6 +110,8 @@ class MyApp<Sinatra::Base
 			token = i["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "#{lobby["username"]} has left the lobby!"
+			notification.custom_data = {left: true}
+
 			APN.push(notification)
 		end		
 		lobby.update(:groupid => SecureRandom.hex, :owner => 'no', :isfull => false)
@@ -170,6 +173,7 @@ class MyApp<Sinatra::Base
 				token = i["udid"]
 				notification = Houston::Notification.new(device:token)
 				notification.alert = "#{player["username"]} has joined the lobby!"
+				notification.custom_data = {joins: true}
 				APN.push(notification)
 			end
 		else
@@ -178,6 +182,7 @@ class MyApp<Sinatra::Base
 			token = player["udid"]
 			notification = Houston::Notification.new(device:token)
 			notification.alert = "Lobby is full"
+			notification.custom_data = {full: true}
 			APN.push(notification)
 		end
 		v.to_json
