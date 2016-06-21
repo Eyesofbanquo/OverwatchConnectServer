@@ -27,6 +27,7 @@ class Lobby
 	property :groupid, Text
 	property :udid, Text
 	property :owner, Text
+	property :isfull, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
@@ -52,7 +53,11 @@ class MyApp<Sinatra::Base
 	get '/lobby' do
 		user = Lobby.first(:username => params[:username])
 		lobby = Lobby.all(:groupid => user["groupid"])
-	
+		if lobby.count == 6
+			for i in lobby
+				i["isfull"] = true
+			end
+		end
 		v = lobby.collect{|item| {:username => item.username, :groupid => item.groupid, :udid => item.udid}}
 		v.to_json
 	end
@@ -60,7 +65,7 @@ class MyApp<Sinatra::Base
 	#groupid
 	post '/delete-lobby' do
 		player = Lobby.first(:username => params[:username])
-		player.update(:owner => 'no', :groupid => SecureRandom.hex)
+		player.update(:owner => 'no', :groupid => SecureRandom.hex, :isfull => false)
 
 		groupid = Lobby.all(:groupid => params[:groupid])
 		for i in groupid
@@ -82,7 +87,7 @@ class MyApp<Sinatra::Base
 			notification.alert = "#{lobby["username"]} has left the lobby!"
 			APN.push(notification)
 		end		
-		lobby.update(:groupid => SecureRandom.hex, :owner => 'no')
+		lobby.update(:groupid => SecureRandom.hex, :owner => 'no', :isfull => false)
 	end
 	#parameter requirements
 	#username | password | udid | platform | region
@@ -164,11 +169,12 @@ class MyApp<Sinatra::Base
 		region = params[:region]
 		#owner = "true"
 		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes')
-		#lobby_is_full = Lobby.all(:isfull => false)
-		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
+		lobby_is_full = Lobby.all(:isfull => false)
+		v = lobby_is_full.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
 		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
 end
 end
+
 MyApp.run!
