@@ -12,8 +12,8 @@ require 'houston'
 # Region:String
 # isFull:Bool - to determine whether or not the group is full. When the group is full you'll send a notification to the group letting them know
 
-APN = Houston::Client.development
-APN.certificate = File.read('./apple_push_dev.pem')
+APN = Houston::Client.production
+APN.certificate = File.read('./apple_push_notification_prod.pem')
 DataMapper.setup(:default, 'postgres://zsjpfrlfvevvxf:q57x4Ln9yoMPEm77IdfzddCSF2@ec2-54-225-211-218.compute-1.amazonaws.com:5432/d75l3qthbt16e8')
 
 class Lobby
@@ -167,7 +167,7 @@ class MyApp<Sinatra::Base
 		if lobbyAll.size < 6
 			lobby = Lobby.first(:owner => 'yes')
 			player = Lobby.first(:username => username)
-			player.update(:groupid => lobby["groupid"], :owner => 'no')
+			player.update(:groupid => lobby["groupid"], :owner => 'no', :ready => false)
 			groupid = Lobby.all(:groupid => groupid)
 			for i in groupid
 				token = i["udid"]
