@@ -27,7 +27,6 @@ class Lobby
 	property :groupid, Text
 	property :udid, Text
 	property :owner, Text
-	property :isfull, Boolean, :default => false
 end
 
 DataMapper.finalize.auto_upgrade!
