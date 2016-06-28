@@ -144,12 +144,8 @@ class MyApp<Sinatra::Base
 	#Parameter requirements
 	#username | region | platform | groupsize
 	post '/create-lobby' do
-		#lobby = Lobby.all(:username => params[:username])
-		#lobby.update(:owner => params[:owner])
 		v = {:status => ""}
 		region = Lobby.all(:region => params[:region])
-		#eu_region = Lobby.all(:region => 'eu')
-		
 		if region.size < 5000
 			h = Lobby.first_or_create(:username => params[:username]).update(:password => params[:password], :platform => params[:platform], :groupsize => params[:groupSize],:region => params[:region], :groupid => SecureRandom.hex, :udid => params[:udid], :owner => 'yes')
 			lobby = Lobby.first(:username => params[:username])
@@ -163,6 +159,7 @@ class MyApp<Sinatra::Base
 		v = {:status => ""}
 		username = params[:username]
 		groupid = params[:groupid]
+		
 		#This should get the owner of the group
 		lobbyAll = Lobby.all(:groupid => groupid)
 		if lobbyAll.size < 6
@@ -189,15 +186,10 @@ class MyApp<Sinatra::Base
 		v.to_json
 	end
 	get '/groups' do
-		#platform = params[:platform].to_str
-		#filtered_group = @regions["us"]
 		platform = params[:platform]
 		region = params[:region]
-		#owner = "true"
 		lobbies = Lobby.all(:platform => platform, :region => region, :owner => 'yes', :isfull => false)
-		#lobby_is_full = Lobby.all(:isfull => false)
 		v = lobbies.collect{|item| {:username => item.username, :udid => item.udid, :groupSize => item.groupsize, :groupid => item.groupid}}
-		#"#{lobbies.get(1)["username"]}"
 		v.to_json
 	end
 end
